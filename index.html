@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#F4EFE6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#22201C" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="營養素計算">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<style>:root{padding-top:env(safe-area-inset-top,0px)}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+<title>營養素計算</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<style>
+/* 版面：單欄手機 App。米色紙感底、細邊框卡片、陶土橘當唯一強調色；底部固定導覽列 + 即時合計條 */
+:root{
+  --bg:#F4EFE6; --surface:#FBF8F2; --sunk:#EDE6DA; --ink:#2A2620; --muted:#7B7266; --line:#E0D7C8;
+  --accent:#C15F3C; --accent-ink:#FFFFFF; --accent-soft:#F3E2D7; --danger:#B3402E; --ok:#4F7A4A;
+  --carb:#B98A2E; --prot:#C15F3C; --fat:#6F7F45;
+  --serif:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#22201C; --surface:#2C2924; --sunk:#1B1916; --ink:#EEE8DD; --muted:#A69D90; --line:#3D3830;
+  --accent:#DB7A55; --accent-ink:#1E1B17; --accent-soft:#43302A; --danger:#E0705C; --ok:#8DB585;
+  --carb:#D6AC55; --prot:#DB7A55; --fat:#A3B477; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#22201C; --surface:#2C2924; --sunk:#1B1916; --ink:#EEE8DD; --muted:#A69D90; --line:#3D3830;
+  --accent:#DB7A55; --accent-ink:#1E1B17; --accent-soft:#43302A; --danger:#E0705C; --ok:#8DB585;
+  --carb:#D6AC55; --prot:#DB7A55; --fat:#A3B477; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;-webkit-tap-highlight-color:transparent}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:520px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px calc(150px + env(safe-area-inset-bottom,0px))}
+h1{font-family:var(--serif);font-weight:700;font-size:1.6rem;letter-spacing:.02em;margin:0;text-wrap:balance}
+h2{font-family:var(--serif);font-weight:500;font-size:1.15rem;margin:0}
+.head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding-bottom:14px;border-bottom:1px solid var(--line);margin-bottom:18px}
+.head small{color:var(--muted);font-size:.78rem;white-space:nowrap}
+.stack{display:flex;flex-direction:column;gap:12px}
+.muted{color:var(--muted)}
+.num{font-variant-numeric:tabular-nums}
+
+/* 食物卡片 */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 8px 14px 14px;display:grid;grid-template-columns:28px 1fr 34px;gap:10px 8px;align-items:start}
+.idx{font-family:var(--serif);font-size:1.25rem;color:var(--accent);line-height:1;padding-top:10px;text-align:center}
+.fields{display:flex;flex-direction:column;gap:8px;min-width:0}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.row.qty{grid-template-columns:1fr 1.2fr}
+.oil{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.oil input{width:84px}
+.oil .lock{font-size:.8rem}
+.x{grid-column:3;grid-row:1;width:34px;height:38px;border:0;background:none;color:var(--muted);border-radius:8px;font-size:18px;cursor:pointer}
+.x:hover{background:var(--sunk);color:var(--ink)}
+.hint{font-size:.78rem;color:var(--muted)}
+.hint.warn{color:var(--danger)}
+.line{grid-column:2 / 4;display:flex;flex-wrap:wrap;gap:4px 12px;font-size:.85rem;padding-top:8px;border-top:1px dashed var(--line)}
+.line b{font-weight:700}
+select,input{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 10px;min-width:0;width:100%;appearance:none;-webkit-appearance:none}
+select{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 15px) 52%,calc(100% - 10px) 52%;background-size:5px 5px;background-repeat:no-repeat;padding-right:26px}
+select:disabled{opacity:.5}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.qtybox{position:relative}
+.qtybox input{padding-right:8px;font-variant-numeric:tabular-nums;font-size:1.05rem}
+
+/* 按鈕 */
+.btn{font:inherit;font-weight:500;border-radius:12px;padding:12px 14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;width:100%;text-align:center}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.05)}
+.btn.dashed{border-style:dashed;color:var(--muted);background:transparent}
+.btn.danger{color:var(--danger)}
+.btns{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.btns.two{display:grid;grid-template-columns:1fr 1fr}
+
+/* 表格 */
+.tablewrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:var(--r)}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:.9rem}
+th,td{padding:10px 8px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left;white-space:normal;padding-left:12px}
+th:last-child,td:last-child{padding-right:12px}
+th{font-weight:500;color:var(--muted);font-size:.78rem;letter-spacing:.06em}
+td small{display:block;color:var(--muted);font-size:.75rem}
+tfoot td{border-bottom:0;font-weight:700;background:var(--sunk)}
+tr.remain td{background:var(--accent-soft);font-weight:500}
+td.neg{color:var(--danger)}
+
+/* 已儲存清單 */
+.list{display:flex;flex-direction:column;gap:8px;padding:0;margin:0;list-style:none}
+.list button{display:grid;grid-template-columns:28px 1fr auto;align-items:center;gap:10px;width:100%;text-align:left;font:inherit;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer}
+.list button:hover{border-color:var(--muted)}
+.list .n{font-family:var(--serif);color:var(--accent)}
+.list .k{font-variant-numeric:tabular-nums;color:var(--muted);font-size:.85rem}
+.empty{text-align:center;color:var(--muted);padding:40px 0;border:1px dashed var(--line);border-radius:var(--r)}
+
+/* 設定 */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:12px}
+.goals{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.goals label,.field label{display:flex;flex-direction:column;gap:4px;font-size:.78rem;color:var(--muted)}
+.toggle{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.toggle input{width:auto;accent-color:var(--accent);transform:scale(1.25)}
+textarea{font:inherit;font-size:.88rem;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;width:100%;min-height:84px;resize:vertical}
+.tag{display:inline-block;font-size:.72rem;padding:2px 8px;border-radius:99px;background:var(--accent-soft);color:var(--accent);font-weight:500}
+
+/* 即時合計條 + 導覽列 */
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+.dock-in{max-width:520px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.totals{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+.totals .kcal{font-family:var(--serif);font-size:1.35rem;font-weight:700}
+.totals .kcal small{font-family:var(--sans);font-size:.75rem;font-weight:400;color:var(--muted);margin-left:2px}
+.macros{display:flex;gap:12px;font-size:.85rem}
+.macros span::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;vertical-align:1px;background:currentColor}
+.c{color:var(--carb)} .p{color:var(--prot)} .f{color:var(--fat)}
+.macros b{color:var(--ink);font-weight:500}
+nav{display:grid;grid-template-columns:repeat(3,1fr)}
+nav button{font:inherit;font-size:.75rem;letter-spacing:.08em;background:none;border:0;color:var(--muted);padding:8px 0 10px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer}
+nav button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+nav button[aria-current="page"]{color:var(--accent)}
+
+/* 對話框與提示 */
+.scrim{position:fixed;inset:0;background:rgba(30,25,20,.38);z-index:40;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--surface);width:100%;max-width:520px;border-radius:18px 18px 0 0;padding:20px max(16px,env(safe-area-inset-left,0px)) calc(20px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:14px;max-height:85%;overflow:auto}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(140px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:99px;font-size:.88rem;z-index:50}
+@media (prefers-reduced-motion:no-preference){.sheet{animation:up .22s ease-out}@keyframes up{from{transform:translateY(24px);opacity:.6}}}
+@media (max-width:380px){.goals{grid-template-columns:repeat(2,1fr)}.macros{gap:8px;font-size:.8rem}}
+</style>
+
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<div class="dock">
+  <div class="dock-in">
+    <div class="totals" id="totals"></div>
+    <nav id="nav">
+      <button data-tab="calc"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8 7h8M8.5 12h.01M12 12h.01M15.5 12h.01M8.5 15.5h.01M12 15.5h.01M15.5 15.5h.01"/></svg>計算機</button>
+      <button data-tab="saved"><svg viewBox="0 0 24 24"><path d="M7 3h10a1 1 0 0 1 1 1v17l-6-4-6 4V4a1 1 0 0 1 1-1z"/></svg>已儲存</button>
+      <button data-tab="settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>設定</button>
+    </nav>
+  </div>
+</div>
+<div id="layer"></div>
+
+<script>
+/* ===== 食物資料（Food DB 2026-11-24 匯出；同步後以手機內的最新版為準） ===== */
+const BUNDLED_DB = [{"cat":"蛋白質","name":"蛋白","unit":"1顆","grams":33.0,"basis":"生重","p100":[52.0,0.7,10.9,0.2],"pu":[17.2,0.2,3.6,0.1],"ratio":null,"oil":0,"pref":""},{"cat":"蛋白質","name":"全蛋","unit":"1顆","grams":46.0,"basis":"生重","p100":[143.0,0.7,12.6,9.5],"pu":[65.8,0.3,5.8,4.4],"ratio":null,"oil":5.0,"pref":""},{"cat":"蛋白質","name":"雞胸肉","unit":"100g","grams":100.0,"basis":"生重","p100":[120.0,0.0,22.5,2.6],"pu":[120.0,0.0,22.5,2.6],"ratio":0.75,"oil":5.0,"pref":"生重"},{"cat":"蛋白質","name":"豬小里肌","unit":"100g","grams":100.0,"basis":"生重","p100":[119.0,0.0,21.6,3.9],"pu":[119.0,0.0,21.6,3.9],"ratio":0.75,"oil":5.0,"pref":"生重"},{"cat":"蛋白質","name":"蝦仁","unit":"100g","grams":100.0,"basis":"生重","p100":[85.0,0.2,20.1,0.5],"pu":[85.0,0.2,20.1,0.5],"ratio":0.8,"oil":0,"pref":"生重"},{"cat":"蛋白質","name":"鮭魚","unit":"100g","grams":100.0,"basis":"生重","p100":[208.0,0.0,20.4,13.4],"pu":[208.0,0.0,20.4,13.4],"ratio":0.8,"oil":0,"pref":"生重"},{"cat":"蛋白質","name":"白肉魚（鱈魚類）","unit":"100g","grams":100.0,"basis":"生重","p100":[82.0,0.0,17.9,0.7],"pu":[82.0,0.0,17.9,0.7],"ratio":0.8,"oil":5.0,"pref":"生重"},{"cat":"蛋白質","name":"牛腿肉","unit":"100g","grams":100.0,"basis":"生重","p100":[121.0,0.0,21.5,4.0],"pu":[121.0,0.0,21.5,4.0],"ratio":0.7,"oil":0,"pref":"生重"},{"cat":"蛋白質","name":"鯖魚（青花魚）","unit":"100g","grams":100.0,"basis":"待確認","p100":[230.0,0.0,20.0,16.0],"pu":[230.0,0.0,20.0,16.0],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"馬鈴薯","unit":"100g","grams":100.0,"basis":"熟重","p100":[93.0,21.0,2.5,0.1],"pu":[93.0,21.0,2.5,0.1],"ratio":0.83,"oil":0,"pref":"熟重"},{"cat":"碳水","name":"烤地瓜","unit":"100g","grams":100.0,"basis":"熟重","p100":[130.0,30.0,2.1,0.2],"pu":[130.0,30.0,2.1,0.2],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"燕麥片","unit":"60g","grams":60.0,"basis":"乾重","p100":[380.0,68.0,12.0,7.0],"pu":[228.0,40.8,7.2,4.2],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"恰巴塔","unit":"1顆","grams":100.0,"basis":"成品","p100":[224.4,40.8,10.5,1.8],"pu":[224.4,40.8,10.5,1.8],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"蕎麥麵","unit":"100g","grams":100.0,"basis":"熟重","p100":[99.0,21.4,5.1,0.1],"pu":[99.0,21.4,5.1,0.1],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"藜麥","unit":"100g","grams":100.0,"basis":"熟重","p100":[120.0,21.3,4.4,1.9],"pu":[120.0,21.3,4.4,1.9],"ratio":3.0,"oil":0,"pref":"熟重"},{"cat":"碳水","name":"野莓吐司","unit":"1份","grams":67.0,"basis":"成品","p100":[346.8,59.6,9.2,7.6],"pu":[232.4,39.9,6.2,5.1],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"隔夜燕麥杯","unit":"1份","grams":null,"basis":"成品","p100":[null,null,null,null],"pu":[301.0,42.2,17.4,7.7],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"全麥吐司","unit":"1份","grams":83.0,"basis":"成品","p100":[221.0,41.3,10.1,1.5],"pu":[183.4,34.3,8.4,1.2],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"高蛋白巧克力吐司","unit":"1份","grams":50.0,"basis":"成品","p100":[254.0,39.2,15.4,2.8],"pu":[127.0,19.6,7.7,1.4],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"地瓜（蒸）","unit":"100g","grams":100.0,"basis":"熟重","p100":[120.0,27.8,1.3,0.2],"pu":[120.0,27.8,1.3,0.2],"ratio":1.0,"oil":0,"pref":"熟重"},{"cat":"碳水","name":"烏龍麵","unit":"100g","grams":100.0,"basis":"熟重","p100":[105.0,21.6,2.6,0.4],"pu":[105.0,21.6,2.6,0.4],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"白飯","unit":"100g","grams":100.0,"basis":"熟重","p100":[156.0,37.1,2.5,0.3],"pu":[156.0,37.1,2.5,0.3],"ratio":2.2,"oil":0,"pref":"熟重"},{"cat":"碳水","name":"藜麥白米（自配）","unit":"1份","grams":50.0,"basis":"生重","p100":[366.0,77.2,9.2,1.0],"pu":[183.0,38.6,4.6,0.5],"ratio":2.3,"oil":0,"pref":"生重"},{"cat":"碳水","name":"光合力量吐司","unit":"1份","grams":50.0,"basis":"成品","p100":[254.3,47.2,10.6,0.0],"pu":[127.2,23.6,5.3,0.0],"ratio":null,"oil":0,"pref":""},{"cat":"蔬菜","name":"綜合蔬菜","unit":"100g","grams":100.0,"basis":"熟重","p100":[35.0,5.5,2.1,0.4],"pu":[35.0,5.5,2.1,0.4],"ratio":0.8,"oil":0,"pref":"生重"},{"cat":"其他","name":"酸奶碗","unit":"1份","grams":250.0,"basis":"成品","p100":[36.8,4.6,5.08,0.4],"pu":[92.0,11.5,12.7,1.0],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"熱美式","unit":"1杯","grams":240.0,"basis":"成品","p100":[2.1,0.0,0.0,0.0],"pu":[5.0,0.0,0.0,0.0],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"香蕉","unit":"1根","grams":118.0,"basis":"生重","p100":[89.0,22.8,1.1,0.3],"pu":[105.0,26.9,1.3,0.4],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"On 雙巧高蛋白","unit":"1份","grams":30.0,"basis":"成品","p100":[386.7,10.0,80.0,2.3],"pu":[116.0,3.0,24.0,0.7],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"麥當勞雙層牛肉吉士堡（不加番茄醬）","unit":"1份","grams":null,"basis":"成品","p100":[null,null,null,null],"pu":[430.0,30.0,25.0,24.0],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"麥當勞小杯玉米","unit":"1份","grams":null,"basis":"成品","p100":[null,null,null,null],"pu":[54.0,7.0,2.0,1.0],"ratio":null,"oil":0,"pref":""},{"cat":"脂肪","name":"橄欖油","unit":"100g","grams":100.0,"basis":"成品","p100":[884.0,0.0,0.0,100.0],"pu":[884.0,0.0,0.0,100.0],"ratio":null,"oil":0,"pref":""}];
+const BUNDLED_AT = "2026-11-24";
+const SYNC_URL = "https://script.google.com/macros/s/AKfycbzZDKeK-itFIvG279MDU8MEp740LA1n1a5i37rxIGrC0HtB8MzZ5bzLoVDw1i1ihf7U/exec";
+const CATS = ["蛋白質","碳水","蔬菜","脂肪","其他"];
+const OIL = {kcal:8.84, f:1};   // 橄欖油每克
+const DEFAULT_PROMPT = "請幫我估算我接下來外食的熱量與碳蛋脂，加上上面已知的部分，給我整餐總計，並告訴我有沒有超出今日剩餘額度。";
+
+/* ===== 儲存 ===== */
+const KEY = "nutri-calc-v1";
+function load(){ try{ return JSON.parse(localStorage.getItem(KEY)) || null }catch(e){ return null } }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)) }catch(e){} }
+const uid = () => Math.random().toString(36).slice(2,9);
+
+const S = Object.assign({
+  db: null, dbAt: null, syncUrl: "",
+  items: [
+    {id:uid(), cat:"蛋白質", food:"雞胸肉", qty:"150", opt:"g_base", oil:"5"},
+    {id:uid(), cat:"碳水", food:"白飯", qty:"180", opt:"g_base", oil:"0"},
+    {id:uid(), cat:"蔬菜", food:"綜合蔬菜", qty:"200", opt:"g_alt", oil:"0"},
+  ],
+  sample: true,
+  goals: {kcal:1500, c:150, p:100, f:40},
+  withRemain: true,
+  prompt: DEFAULT_PROMPT,
+  saved: [],
+  recent: {},
+}, load() || {});
+const db = () => S.db || BUNDLED_DB;
+const findFood = name => db().find(f => f.name === name);
+
+let view = {tab:"calc", sub:null, openId:null};
+
+/* ===== 計算 ===== */
+const isWeightUnit = f => /^\d+(\.\d+)?g$/i.test(f.unit);
+const unitWord = f => (f.unit || "份").replace(/^[\d.]+/, "") || "份";
+const otherBasis = f => f.basis === "熟重" ? "生重" : "熟重";
+function options(f){
+  if(!f) return [];
+  const o = [];
+  const hasP100 = f.p100 && f.p100[0] != null;
+  const gLabel = b => b === "成品" ? "克" : `克（${b}）`;
+  if(isWeightUnit(f)){
+    o.push({k:"g_base", label:gLabel(f.basis)});
+    if(f.ratio) o.push({k:"g_alt", label:gLabel(otherBasis(f))});
+    if(f.grams && f.grams !== 100) o.push({k:"unit", label:`份（${f.grams}g）`});
+  } else {
+    o.push({k:"unit", label:unitWord(f)});
+    if(hasP100 && f.grams){
+      o.push({k:"g_base", label:gLabel(f.basis)});
+      if(f.ratio) o.push({k:"g_alt", label:gLabel(otherBasis(f))});
+    }
+  }
+  return o;
+}
+function defaultOpt(f){
+  const o = options(f);
+  if(f && f.pref && f.ratio && f.pref !== f.basis && isWeightUnit(f) && o.some(x=>x.k==="g_alt")) return "g_alt";
+  return o[0]?.k || "g_base";
+}
+function calc(it){
+  const f = findFood(it.food);
+  const z = {kcal:0,c:0,p:0,f:0,ok:false};
+  if(!f) return z;
+  const q = parseFloat(it.qty);
+  const oil = parseFloat(it.oil) || 0;
+  let v = [0,0,0,0], grams = null;
+  if(q > 0){
+    if(it.opt === "unit"){
+      if(f.pu && f.pu[0] != null) v = f.pu.map(x => (x||0)*q);
+      else if(f.grams){ grams = f.grams*q; v = f.p100.map(x => (x||0)*grams/100) }
+    } else {
+      grams = it.opt === "g_alt" ? (f.basis === "熟重" ? q*f.ratio : q/f.ratio) : q;
+      v = f.p100.map(x => (x||0)*grams/100);
+    }
+  }
+  return {kcal:v[0]+oil*OIL.kcal, c:v[1], p:v[2], f:v[3]+oil*OIL.f, ok:q>0};
+}
+const sum = arr => arr.reduce((a,x)=>({kcal:a.kcal+x.kcal,c:a.c+x.c,p:a.p+x.p,f:a.f+x.f}),{kcal:0,c:0,p:0,f:0});
+const k0 = n => Math.round(n).toLocaleString("zh-TW");
+const g1 = n => (Math.round(n*10)/10).toFixed(1).replace(/\.0$/,"");
+
+function describe(it){
+  const f = findFood(it.food); if(!f) return "";
+  const o = options(f).find(x=>x.k===it.opt);
+  let s;
+  if(it.opt === "unit") s = `${it.qty} ${o ? o.label.replace(/（.*）/,"") : "份"}`;
+  else { const b = it.opt === "g_alt" ? otherBasis(f) : f.basis; s = (b === "成品" ? "" : b + " ") + it.qty + "g" }
+  const oil = parseFloat(it.oil) || 0;
+  return s + (oil ? `＋油 ${g1(oil)}g` : "");
+}
+
+/* ===== 文字輸出 ===== */
+function toText(items){
+  return items.filter(it => calc(it).ok).map(it => { const r = calc(it);
+    return `${it.food}（${describe(it)}）：${k0(r.kcal)} kcal｜碳 ${g1(r.c)}g｜蛋 ${g1(r.p)}g｜脂 ${g1(r.f)}g` }).join(String.fromCharCode(10));
+}
+async function copy(text){
+  try{ await navigator.clipboard.writeText(text); toast("已複製") }
+  catch(e){ sheet(`<h2>手動複製</h2><p class="hint">這個環境不允許自動複製，請長按下面的文字全選複製。</p><textarea id="cp" readonly style="min-height:220px">${esc(text)}</textarea><button class="btn" data-close>關閉</button>`);
+    const t = document.getElementById("cp"); t.focus(); t.select() }
+}
+
+/* ===== 畫面 ===== */
+const $app = document.getElementById("app");
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function foodsIn(cat){
+  const list = db().filter(f => f.cat === cat);
+  return list.sort((a,b) => (S.recent[b.name]||0) - (S.recent[a.name]||0));
+}
+function itemCard(it, i){
+  const f = findFood(it.food);
+  const opts = options(f);
+  const r = calc(it);
+  let hint = "", warn = false;
+  if(f){
+    if(f.basis === "待確認"){ hint = "資料表標示「待確認」：還不確定這筆數據是生重還是熟重"; warn = true }
+    else if(f.ratio && f.basis !== "成品") hint = `可切換生重／熟重（熟重 ÷ 生重 ＝ ${f.ratio}）`;
+    else if(isWeightUnit(f) && f.basis !== "成品") hint = `只有${f.basis}數據，請秤${f.basis}`;
+    else if(!f.grams && f.pu && f.pu[0] != null) hint = "以份計，沒有克數資料";
+  }
+  return `<article class="card" data-id="${it.id}">
+    <div class="idx">${i+1}</div>
+    <div class="fields">
+      <div class="row">
+        <select data-k="cat" aria-label="類型" id="cat-${it.id}">
+          ${CATS.map(c=>`<option ${c===it.cat?"selected":""}>${c}</option>`).join("")}
+        </select>
+        <select data-k="food" aria-label="食物" id="food-${it.id}">
+          <option value="">選擇食物</option>
+          ${foodsIn(it.cat).map(x=>`<option ${x.name===it.food?"selected":""}>${esc(x.name)}</option>`).join("")}
+        </select>
+      </div>
+      <div class="row qty">
+        <div class="qtybox"><input data-k="qty" id="qty-${it.id}" type="text" inputmode="decimal" placeholder="份量" value="${esc(it.qty)}" aria-label="份量"></div>
+        <select data-k="opt" id="opt-${it.id}" aria-label="單位" ${f?"":"disabled"}>
+          ${opts.map(o=>`<option value="${o.k}" ${o.k===it.opt?"selected":""}>${o.label}</option>`).join("") || "<option>單位</option>"}
+        </select>
+      </div>
+      ${hint ? `<div class="hint ${warn?"warn":""}">${hint}</div>` : ""}
+      <label class="oil" for="oil-${it.id}">料理用油
+        <input data-k="oil" id="oil-${it.id}" type="text" inputmode="decimal" value="${esc(it.oil)}" placeholder="0"> 克
+      </label>
+    </div>
+    <div class="line num">${r.ok ? `<b>${k0(r.kcal)} kcal</b><span class="c">碳 ${g1(r.c)}</span><span class="p">蛋 ${g1(r.p)}</span><span class="f">脂 ${g1(r.f)}</span>` : `<span class="muted">選好食物並填份量後顯示</span>`}</div>
+    <button class="x" data-act="remove" aria-label="刪除這個品項">✕</button>
+  </article>`;
+}
+
+function table(items, withRemain){
+  const rows = items.filter(it=>calc(it).ok);
+  const t = sum(rows.map(calc));
+  const G = S.goals;
+  const rem = withRemain && G ? {kcal:G.kcal-t.kcal, c:G.c-t.c, p:G.p-t.p, f:G.f-t.f} : null;
+  const cell = (v,fmt) => `<td class="${v<0?"neg":""}">${fmt(v)}</td>`;
+  return `<div class="tablewrap"><table>
+    <thead><tr><th>品項</th><th>熱量</th><th>碳</th><th>蛋</th><th>脂</th></tr></thead>
+    <tbody>${rows.map(it=>{const r=calc(it);return `<tr><td>${esc(it.food)}<small>${esc(describe(it))}</small></td><td>${k0(r.kcal)}</td><td>${g1(r.c)}</td><td>${g1(r.p)}</td><td>${g1(r.f)}</td></tr>`}).join("") || `<tr><td colspan="5" class="muted">還沒有填好的品項</td></tr>`}</tbody>
+    <tfoot><tr><td>Total</td><td>${k0(t.kcal)}</td><td>${g1(t.c)}</td><td>${g1(t.p)}</td><td>${g1(t.f)}</td></tr>
+    ${rem ? `<tr class="remain"><td>今日剩餘<small>目標 ${k0(G.kcal)} kcal</small></td>${cell(rem.kcal,k0)}${cell(rem.c,g1)}${cell(rem.p,g1)}${cell(rem.f,g1)}</tr>` : ""}</tfoot>
+  </table></div>`;
+}
+
+function render(){
+  document.querySelectorAll("#nav button").forEach(b => b.setAttribute("aria-current", b.dataset.tab===view.tab ? "page" : "false"));
+  if(view.tab === "calc" && view.sub === "result") renderResult();
+  else if(view.tab === "calc") renderCalc();
+  else if(view.tab === "saved" && view.openId) renderSavedDetail();
+  else if(view.tab === "saved") renderSaved();
+  else renderSettings();
+  renderTotals();
+}
+function renderTotals(){
+  const t = sum(S.items.map(calc));
+  document.getElementById("totals").innerHTML =
+    `<div class="kcal">${k0(t.kcal)}<small>kcal</small></div>
+     <div class="macros"><span class="c"><b>碳 ${g1(t.c)}</b></span><span class="p"><b>蛋 ${g1(t.p)}</b></span><span class="f"><b>脂 ${g1(t.f)}</b></span></div>`;
+}
+function renderCalc(){
+  $app.innerHTML = `<header class="head"><h1>營養素計算機</h1><small>${S.sample ? '<span class="tag">範例，直接改就好</span>' : `資料 ${S.dbAt || BUNDLED_AT}`}</small></header>
+    <div class="stack" id="cards">${S.items.map(itemCard).join("")}</div>
+    <div class="btns">
+      <button class="btn dashed" data-act="add">＋ 新增品項</button>
+      <button class="btn primary" data-act="calc">計算</button>
+    </div>`;
+}
+function renderResult(){
+  $app.innerHTML = `<header class="head"><h1>營養素計算機</h1><small>計算結果</small></header>
+    ${table(S.items, view.showRemain)}
+    <div class="btns">
+      <button class="btn primary" data-act="copy">複製文字版</button>
+      <button class="btn" data-act="save">儲存紀錄</button>
+      <button class="btn" data-act="remain">剩餘額度計算</button>
+      <button class="btn" data-act="back">修改</button>
+    </div>`;
+}
+function renderSaved(){
+  $app.innerHTML = `<header class="head"><h1>已儲存清單</h1><small>${S.saved.length} 組</small></header>
+    ${S.saved.length ? `<ol class="list">${S.saved.map((s,i)=>{const t=sum(s.items.map(calc));
+      return `<li><button data-open="${s.id}"><span class="n">${i+1}</span><span>${esc(s.name)}</span><span class="k">${k0(t.kcal)} kcal</span></button></li>`}).join("")}</ol>`
+    : `<div class="empty">還沒有儲存的組合。<br>在計算結果頁按「儲存紀錄」就會出現在這裡。</div>`}`;
+}
+function renderSavedDetail(){
+  const s = S.saved.find(x=>x.id===view.openId); if(!s){ view.openId=null; return renderSaved() }
+  $app.innerHTML = `<header class="head"><h1>${esc(s.name)}</h1><small><a href="#" data-act="closeSaved" style="color:var(--accent)">← 清單</a></small></header>
+    ${table(s.items, view.showRemain)}
+    <div class="btns">
+      <button class="btn primary" data-act="copySaved">複製文字版</button>
+      <button class="btn" data-act="remain">剩餘額度計算</button>
+      <button class="btn" data-act="editSaved">修改（載入計算機）</button>
+      <button class="btn danger" data-act="delSaved">刪除</button>
+    </div>`;
+}
+function renderSettings(){
+  const G = S.goals;
+  $app.innerHTML = `<header class="head"><h1>設定</h1><small></small></header>
+  <div class="stack">
+    <section class="panel">
+      <h2>每日目標</h2>
+      <div class="goals">
+        <label>熱量 kcal<input id="g-kcal" inputmode="decimal" value="${G.kcal}"></label>
+        <label>碳水 g<input id="g-c" inputmode="decimal" value="${G.c}"></label>
+        <label>蛋白質 g<input id="g-p" inputmode="decimal" value="${G.p}"></label>
+        <label>脂肪 g<input id="g-f" inputmode="decimal" value="${G.f}"></label>
+      </div>
+    </section>
+    <section class="panel">
+      <h2>食物資料庫</h2>
+      <p class="hint">目前 ${db().length} 個食物，版本 ${S.dbAt || BUNDLED_AT + "（內建）"}。要新增或修改食物，請直接改 Google Sheet 的 Food DB，再回來按同步。</p>
+      <div class="field"><label>同步網址（Apps Script）<input id="syncUrl" placeholder="安裝正式版時會幫你填好" value="${esc(S.syncUrl)}"></label></div>
+      <button class="btn" data-act="sync">從 Google Sheet 同步</button>
+    </section>
+  </div>`;
+}
+
+/* ===== 對話框 ===== */
+const $layer = document.getElementById("layer");
+function sheet(html){ $layer.innerHTML = `<div class="scrim" data-scrim><div class="sheet" role="dialog" aria-modal="true">${html}</div></div>`; }
+function closeSheet(){ $layer.innerHTML = "" }
+let toastT;
+function toast(msg){ clearTimeout(toastT); let t = document.querySelector(".toast"); if(!t){ t = document.createElement("div"); t.className="toast"; t.setAttribute("role","status"); document.body.appendChild(t) } t.textContent = msg; toastT = setTimeout(()=>t.remove(), 2200) }
+
+function goalsSheet(){
+  const G = S.goals;
+  sheet(`<h2>今日目標</h2><p class="hint">會記住這次填的數字，下次直接帶入。</p>
+    <div class="goals">
+      <label>熱量 kcal<input id="m-kcal" inputmode="decimal" value="${G.kcal}"></label>
+      <label>碳水 g<input id="m-c" inputmode="decimal" value="${G.c}"></label>
+      <label>蛋白質 g<input id="m-p" inputmode="decimal" value="${G.p}"></label>
+      <label>脂肪 g<input id="m-f" inputmode="decimal" value="${G.f}"></label>
+    </div>
+    <div class="btns two"><button class="btn" data-close>取消</button><button class="btn primary" data-act="goalsOk">計算剩餘</button></div>`);
+}
+
+/* ===== 事件 ===== */
+function touch(){ if(S.sample){ S.sample = false } }
+document.addEventListener("input", e => {
+  const card = e.target.closest(".card");
+  if(card){
+    const it = S.items.find(x=>x.id===card.dataset.id), k = e.target.dataset.k;
+    if(!it || !k) return;
+    touch();
+    if(k === "cat"){ it.cat = e.target.value; it.food = ""; it.opt = "g_base"; it.oil = "0"; save(); renderCalc(); renderTotals(); return }
+    if(k === "food"){ it.food = e.target.value; const f = findFood(it.food); it.opt = defaultOpt(f); it.oil = String(f?.oil || 0);
+      if(f) S.recent[f.name] = Date.now(); save(); renderCalc(); renderTotals();
+      document.getElementById("qty-"+it.id)?.focus(); return }
+    it[k] = e.target.value; save();
+    if(k === "opt"){ renderCalc() } else {
+      const r = calc(it), line = card.querySelector(".line");
+      line.innerHTML = r.ok ? `<b>${k0(r.kcal)} kcal</b><span class="c">碳 ${g1(r.c)}</span><span class="p">蛋 ${g1(r.p)}</span><span class="f">脂 ${g1(r.f)}</span>` : `<span class="muted">選好食物並填份量後顯示</span>`;
+    }
+    renderTotals(); return;
+  }
+  const id = e.target.id;
+  if(id && id.startsWith("g-")){ S.goals[id.slice(2)] = parseFloat(e.target.value)||0; save() }
+  if(id === "withRemain"){ S.withRemain = e.target.checked; save() }
+  if(id === "prompt"){ S.prompt = e.target.value; save() }
+  if(id === "syncUrl"){ S.syncUrl = e.target.value.trim(); save() }
+});
+
+document.addEventListener("click", async e => {
+  const nav = e.target.closest("#nav button");
+  if(nav){ view = {tab:nav.dataset.tab, sub:null, openId:null}; render(); window.scrollTo(0,0); return }
+  if(e.target.matches("[data-scrim]") || e.target.closest("[data-close]")){ closeSheet(); return }
+  const open = e.target.closest("[data-open]");
+  if(open){ view.openId = open.dataset.open; view.showRemain = false; render(); window.scrollTo(0,0); return }
+  const a = e.target.closest("[data-act]"); if(!a) return;
+  const act = a.dataset.act;
+  if(a.tagName === "A") e.preventDefault();
+  const current = () => view.tab === "saved" ? S.saved.find(x=>x.id===view.openId) : null;
+
+  switch(act){
+    case "add": touch(); { const last = S.items[S.items.length-1];
+      S.items.push({id:uid(), cat:last?.cat || "蛋白質", food:"", qty:"", opt:"g_base", oil:"0"}); save(); renderCalc(); renderTotals();
+      const nid = S.items[S.items.length-1].id; document.getElementById("food-"+nid)?.scrollIntoView({block:"center"}) } break;
+    case "remove": touch(); { const id = a.closest(".card").dataset.id; S.items = S.items.filter(x=>x.id!==id);
+      if(!S.items.length) S.items.push({id:uid(), cat:"蛋白質", food:"", qty:"", opt:"g_base", oil:"0"}); save(); renderCalc(); renderTotals() } break;
+    case "calc": view.sub = "result"; view.showRemain = false; render(); window.scrollTo(0,0); break;
+    case "back": view.sub = null; render(); break;
+    case "copy": copy(toText(S.items)); break;
+    case "copySaved": { const s = current(); if(s) copy(toText(s.items)) } break;
+    case "save": sheet(`<h2>儲存這組</h2><div class="field"><label>名稱<input id="saveName" placeholder="例如：健身日午餐" maxlength="40"></label></div>
+      <div class="btns two"><button class="btn" data-close>取消</button><button class="btn primary" data-act="saveOk">儲存</button></div>`);
+      setTimeout(()=>document.getElementById("saveName")?.focus(), 50); break;
+    case "saveOk": { const name = document.getElementById("saveName").value.trim() || `未命名 ${S.saved.length+1}`;
+      S.saved.unshift({id:uid(), name, at:Date.now(), items:S.items.filter(it=>calc(it).ok).map(it=>({...it, id:uid()}))});
+      save(); closeSheet(); toast(`已儲存「${name}」`) } break;
+    case "remain": goalsSheet(); break;
+    case "goalsOk": ["kcal","c","p","f"].forEach(k => S.goals[k] = parseFloat(document.getElementById("m-"+k).value)||0);
+      save(); closeSheet(); view.showRemain = true; render(); break;
+    case "closeSaved": view.openId = null; render(); break;
+    case "editSaved": { const s = current(); if(!s) break;
+      S.items = s.items.map(it=>({...it, id:uid()})); S.sample = false; save();
+      view = {tab:"calc", sub:null, openId:null}; render(); window.scrollTo(0,0); toast(`已載入「${s.name}」，改完可再儲存`) } break;
+    case "delSaved": { const s = current(); if(!s) break;
+      sheet(`<h2>刪除「${esc(s.name)}」？</h2><p class="hint">刪除後無法復原。</p>
+        <div class="btns two"><button class="btn" data-close>取消</button><button class="btn primary" data-act="delOk" style="background:var(--danger);border-color:var(--danger)">刪除</button></div>`) } break;
+    case "delOk": S.saved = S.saved.filter(x=>x.id!==view.openId); view.openId = null; save(); closeSheet(); render(); toast("已刪除"); break;
+    case "resetPrompt": S.prompt = DEFAULT_PROMPT; save(); renderSettings(); break;
+    case "sync": {
+      if(!S.syncUrl){ toast("還沒有同步網址"); break }
+      a.disabled = true; a.textContent = "同步中…";
+      const n = await syncDb();
+      a.disabled = false; a.textContent = "從 Google Sheet 同步";
+      if(n){ toast(`同步完成：${n} 個食物`); renderSettings() }
+      else toast("同步失敗：請確認有網路，或同步網址是否正確");
+    } break;
+  }
+});
+document.addEventListener("keydown", e => { if(e.key === "Escape") closeSheet(); if(e.key === "Enter" && document.getElementById("saveName") === document.activeElement) document.querySelector('[data-act="saveOk"]')?.click() });
+
+/* ===== 同步：成功就存進手機，失敗（沒網路）就繼續用上次存的 ===== */
+async function syncDb(){
+  try{
+    const res = await fetch(S.syncUrl, {cache:"no-store"}); const data = await res.json();
+    if(!Array.isArray(data) || !data.length) throw new Error("格式不對");
+    S.db = data; S.dbAt = new Date().toLocaleString("zh-TW",{hour12:false, month:"numeric", day:"numeric", hour:"2-digit", minute:"2-digit"}); save();
+    return data.length;
+  }catch(err){ return 0 }
+}
+async function autoSync(){
+  if(!S.syncUrl || !navigator.onLine) return;
+  const n = await syncDb();
+  const typing = document.activeElement && /INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName);
+  if(n && !typing && !$layer.innerHTML) render();
+}
+if(!S.syncUrl && SYNC_URL.startsWith("https://")) S.syncUrl = SYNC_URL;
+
+render();
+autoSync();
+</script>
+
+<script>
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js?v=202611241706").catch(()=>{});
+</script>
+</body>
+</html>
