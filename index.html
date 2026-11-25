@@ -106,7 +106,7 @@ td.neg{color:var(--danger)}
 /* 設定 */
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:12px}
 .goals{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.goals label,.field label{display:flex;flex-direction:column;gap:4px;font-size:.78rem;color:var(--muted)}
+.goals label,.field label,.fl{display:flex;flex-direction:column;gap:4px;font-size:.78rem;color:var(--muted)}
 .toggle{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .toggle input{width:auto;accent-color:var(--accent);transform:scale(1.25)}
 textarea{font:inherit;font-size:.88rem;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;width:100%;min-height:84px;resize:vertical}
@@ -153,7 +153,7 @@ nav button[aria-current="page"]{color:var(--accent)}
 
 <script>
 /* ===== 食物資料（Food DB 2026-11-24 匯出；同步後以手機內的最新版為準） ===== */
-const BUNDLED_DB = [{"cat":"蛋白質","name":"煎蛋","unit":"1顆","grams":46.0,"basis":"生重","p100":[143.0,0.7,12.6,9.5],"pu":[65.8,0.3,5.8,4.4],"ratio":null,"oil":5.0,"pref":""},{"cat":"蛋白質","name":"雞胸肉","unit":"100g","grams":100.0,"basis":"生重","p100":[120.0,0.0,22.5,2.6],"pu":[120.0,0.0,22.5,2.6],"ratio":0.75,"oil":5.0,"pref":"生重"},{"cat":"蛋白質","name":"豬里肌","unit":"100g","grams":100.0,"basis":"生重","p100":[119.0,0.0,21.6,3.9],"pu":[119.0,0.0,21.6,3.9],"ratio":0.75,"oil":5.0,"pref":"生重"},{"cat":"蛋白質","name":"蝦仁","unit":"100g","grams":100.0,"basis":"生重","p100":[85.0,0.2,20.1,0.5],"pu":[85.0,0.2,20.1,0.5],"ratio":0.8,"oil":0,"pref":"生重"},{"cat":"蛋白質","name":"鮭魚去皮","unit":"100g","grams":100.0,"basis":"生重","p100":[208.0,0.0,20.4,13.4],"pu":[208.0,0.0,20.4,13.4],"ratio":0.8,"oil":0,"pref":"生重"},{"cat":"蛋白質","name":"白肉魚","unit":"100g","grams":100.0,"basis":"生重","p100":[82.0,0.0,17.9,0.7],"pu":[82.0,0.0,17.9,0.7],"ratio":0.8,"oil":5.0,"pref":"生重"},{"cat":"蛋白質","name":"牛腿肉","unit":"100g","grams":100.0,"basis":"生重","p100":[121.0,0.0,21.5,4.0],"pu":[121.0,0.0,21.5,4.0],"ratio":0.7,"oil":0,"pref":"生重"},{"cat":"碳水","name":"馬鈴薯","unit":"100g","grams":100.0,"basis":"熟重","p100":[93.0,21.0,2.5,0.1],"pu":[93.0,21.0,2.5,0.1],"ratio":0.83,"oil":0,"pref":"熟重"},{"cat":"碳水","name":"地瓜","unit":"100g","grams":100.0,"basis":"熟重","p100":[130.0,30.0,2.1,0.2],"pu":[130.0,30.0,2.1,0.2],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"馬鈴薯+地瓜","unit":"100g","grams":100.0,"basis":"熟重","p100":[111.5,25.5,2.3,0.2],"pu":[111.5,25.5,2.3,0.2],"ratio":null,"oil":0,"pref":"熟重"},{"cat":"碳水","name":"燕麥片","unit":"60g","grams":60.0,"basis":"乾重","p100":[380.0,68.0,12.0,7.0],"pu":[228.0,40.8,7.2,4.2],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"恰巴塔","unit":"1顆","grams":100.0,"basis":"成品","p100":[224.4,40.8,10.5,1.8],"pu":[224.4,40.8,10.5,1.8],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"蕎麥麵","unit":"100g","grams":100.0,"basis":"熟重","p100":[99.0,21.4,5.1,0.1],"pu":[99.0,21.4,5.1,0.1],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"藜麥","unit":"100g","grams":100.0,"basis":"熟重","p100":[120.0,21.3,4.4,1.9],"pu":[120.0,21.3,4.4,1.9],"ratio":3.0,"oil":0,"pref":"熟重"},{"cat":"碳水","name":"烏龍麵","unit":"100g","grams":100.0,"basis":"熟重","p100":[105.0,21.6,2.6,0.4],"pu":[105.0,21.6,2.6,0.4],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"白飯","unit":"100g","grams":100.0,"basis":"熟重","p100":[156.0,37.1,2.5,0.3],"pu":[156.0,37.1,2.5,0.3],"ratio":2.2,"oil":0,"pref":"熟重"},{"cat":"碳水","name":"藜麥白米","unit":"1份","grams":50.0,"basis":"生重","p100":[366.0,77.2,9.2,1.0],"pu":[183.0,38.6,4.6,0.5],"ratio":2.3,"oil":0,"pref":"生重"},{"cat":"碳水","name":"光合力量吐司","unit":"1份","grams":50.0,"basis":"成品","p100":[254.3,47.2,10.6,0.0],"pu":[127.2,23.6,5.3,0.0],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"劍盾青檸吐司","unit":"1份","grams":50.0,"basis":"成品","p100":[260.3,39.2,15.4,2.8],"pu":[130.2,19.6,7.7,1.4],"ratio":null,"oil":0,"pref":""},{"cat":"蔬菜","name":"綜合蔬菜","unit":"100g","grams":100.0,"basis":"熟重","p100":[35.0,5.5,2.1,0.4],"pu":[35.0,5.5,2.1,0.4],"ratio":0.8,"oil":0,"pref":"生重"},{"cat":"蔬菜","name":"綠貨白花菜","unit":"100g","grams":100.0,"basis":"熟重","p100":[23.0,4.1,1.8,0.5],"pu":[23.0,4.1,1.8,0.5],"ratio":null,"oil":0,"pref":""},{"cat":"蔬菜","name":"綠貨菠菜","unit":"100g","grams":100.0,"basis":"熟重","p100":[23.0,3.8,3.0,0.3],"pu":[23.0,3.8,3.0,0.3],"ratio":null,"oil":0,"pref":""},{"cat":"蔬菜","name":"綠貨羽衣甘藍","unit":"100g","grams":100.0,"basis":"成品","p100":[75.0,5.5,2.5,5.0],"pu":[75.0,5.5,2.5,5.0],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"吾島酸奶","unit":"1份","grams":100.0,"basis":"成品","p100":[92.2,11.5,12.7,1.0],"pu":[92.2,11.5,12.7,1.0],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"熱美式","unit":"1杯","grams":240.0,"basis":"成品","p100":[2.1,0.0,0.0,0.0],"pu":[5.0,0.0,0.0,0.0],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"香蕉","unit":"1根","grams":118.0,"basis":"生重","p100":[89.0,22.8,1.1,0.3],"pu":[105.0,26.9,1.3,0.4],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"On雙巧高蛋白","unit":"1份","grams":30.0,"basis":"成品","p100":[386.7,10.0,80.0,2.3],"pu":[116.0,3.0,24.0,0.7],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"雙層牛肉吉士堡去醬","unit":"1份","grams":150.0,"basis":"成品","p100":[288.7,20.0,16.7,16.0],"pu":[433.1,30.0,25.1,24.0],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"板燒雞腿堡去皮去醬","unit":"1份","grams":155.0,"basis":"成品","p100":[256.8,24.5,14.8,11.0],"pu":[398.0,38.0,22.9,17.1],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"低脂肉鬆","unit":"1份","grams":10.0,"basis":"成品","p100":[224.2,38.6,50.8,2.0],"pu":[22.4,3.9,5.1,0.2],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"野人日記餃子","unit":"1顆","grams":20.0,"basis":"成品","p100":[112.8,17.0,6.6,1.9],"pu":[22.6,3.4,1.3,0.4],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"麥當勞小杯玉米","unit":"1份","grams":100.0,"basis":"成品","p100":[54.0,7.0,2.0,1.0],"pu":[54.0,7.0,2.0,1.0],"ratio":null,"oil":0,"pref":""},{"cat":"脂肪","name":"橄欖油","unit":"100g","grams":100.0,"basis":"成品","p100":[884.0,0.0,0.0,100.0],"pu":[884.0,0.0,0.0,100.0],"ratio":null,"oil":0,"pref":""},{"cat":"水果","name":"藍莓","unit":"1顆","grams":1.5,"basis":"生重","p100":[57.0,14.5,0.7,0.3],"pu":[0.9,0.2,0.0,0.0],"ratio":null,"oil":0,"pref":""},{"cat":"水果","name":"小番茄","unit":"1顆","grams":12.0,"basis":"生重","p100":[30.0,6.6,0.9,0.2],"pu":[3.6,0.8,0.1,0.0],"ratio":null,"oil":0,"pref":""},{"cat":"水果","name":"奇異果","unit":"1顆","grams":75.0,"basis":"生重","p100":[61.0,14.7,1.1,0.5],"pu":[45.8,11.0,0.8,0.4],"ratio":null,"oil":0,"pref":""},{"cat":"水果","name":"柚子","unit":"1瓣","grams":40.0,"basis":"生重","p100":[38.0,9.6,0.8,0.0],"pu":[15.2,3.8,0.3,0.0],"ratio":null,"oil":0,"pref":""}];
+const BUNDLED_DB = [{"cat":"蛋白質","name":"煎蛋","unit":"1顆","grams":46.0,"basis":"生重","p100":[143.0,0.7,12.6,9.5],"pu":[65.8,0.3,5.8,4.4],"ratio":null,"oil":5.0,"pref":""},{"cat":"蛋白質","name":"雞胸肉","unit":"100g","grams":100.0,"basis":"生重","p100":[120.0,0.0,22.5,2.6],"pu":[120.0,0.0,22.5,2.6],"ratio":0.75,"oil":5.0,"pref":"生重"},{"cat":"蛋白質","name":"豬里肌","unit":"100g","grams":100.0,"basis":"生重","p100":[119.0,0.0,21.6,3.9],"pu":[119.0,0.0,21.6,3.9],"ratio":0.75,"oil":5.0,"pref":"生重"},{"cat":"蛋白質","name":"蝦仁","unit":"100g","grams":100.0,"basis":"生重","p100":[85.0,0.2,20.1,0.5],"pu":[85.0,0.2,20.1,0.5],"ratio":0.8,"oil":0,"pref":"生重"},{"cat":"蛋白質","name":"鮭魚去皮","unit":"100g","grams":100.0,"basis":"生重","p100":[208.0,0.0,20.4,13.4],"pu":[208.0,0.0,20.4,13.4],"ratio":0.8,"oil":0,"pref":"生重"},{"cat":"蛋白質","name":"白肉魚","unit":"100g","grams":100.0,"basis":"生重","p100":[82.0,0.0,17.9,0.7],"pu":[82.0,0.0,17.9,0.7],"ratio":0.8,"oil":5.0,"pref":"生重"},{"cat":"蛋白質","name":"牛腿肉","unit":"100g","grams":100.0,"basis":"生重","p100":[121.0,0.0,21.5,4.0],"pu":[121.0,0.0,21.5,4.0],"ratio":0.7,"oil":0,"pref":"生重"},{"cat":"碳水","name":"馬鈴薯","unit":"100g","grams":100.0,"basis":"熟重","p100":[93.0,21.0,2.5,0.1],"pu":[93.0,21.0,2.5,0.1],"ratio":0.83,"oil":0,"pref":"熟重"},{"cat":"碳水","name":"地瓜","unit":"100g","grams":100.0,"basis":"熟重","p100":[130.0,30.0,2.1,0.2],"pu":[130.0,30.0,2.1,0.2],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"馬鈴薯+地瓜","unit":"100g","grams":100.0,"basis":"熟重","p100":[111.5,25.5,2.3,0.2],"pu":[111.5,25.5,2.3,0.2],"ratio":null,"oil":0,"pref":"熟重"},{"cat":"碳水","name":"燕麥片","unit":"60g","grams":60.0,"basis":"乾重","p100":[380.0,68.0,12.0,7.0],"pu":[228.0,40.8,7.2,4.2],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"恰巴塔","unit":"1顆","grams":100.0,"basis":"成品","p100":[224.4,40.8,10.5,1.8],"pu":[224.4,40.8,10.5,1.8],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"蕎麥麵","unit":"100g","grams":100.0,"basis":"熟重","p100":[99.0,21.4,5.1,0.1],"pu":[99.0,21.4,5.1,0.1],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"藜麥","unit":"100g","grams":100.0,"basis":"熟重","p100":[120.0,21.3,4.4,1.9],"pu":[120.0,21.3,4.4,1.9],"ratio":3.0,"oil":0,"pref":"熟重"},{"cat":"碳水","name":"烏龍麵","unit":"100g","grams":100.0,"basis":"熟重","p100":[105.0,21.6,2.6,0.4],"pu":[105.0,21.6,2.6,0.4],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"白飯","unit":"100g","grams":100.0,"basis":"熟重","p100":[156.0,37.1,2.5,0.3],"pu":[156.0,37.1,2.5,0.3],"ratio":2.2,"oil":0,"pref":"熟重"},{"cat":"碳水","name":"藜麥白米","unit":"1份","grams":50.0,"basis":"生重","p100":[366.0,77.2,9.2,1.0],"pu":[183.0,38.6,4.6,0.5],"ratio":2.3,"oil":0,"pref":"生重"},{"cat":"碳水","name":"光合力量吐司","unit":"1份","grams":50.0,"basis":"成品","p100":[254.3,47.2,10.6,0.0],"pu":[127.2,23.6,5.3,0.0],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"劍盾青檸吐司","unit":"1份","grams":50.0,"basis":"成品","p100":[260.3,39.2,15.4,2.8],"pu":[130.2,19.6,7.7,1.4],"ratio":null,"oil":0,"pref":""},{"cat":"蔬菜","name":"綜合蔬菜","unit":"100g","grams":100.0,"basis":"熟重","p100":[35.0,5.5,2.1,0.4],"pu":[35.0,5.5,2.1,0.4],"ratio":0.8,"oil":0,"pref":"生重"},{"cat":"蔬菜","name":"綠貨白花菜","unit":"100g","grams":100.0,"basis":"熟重","p100":[23.0,4.1,1.8,0.5],"pu":[23.0,4.1,1.8,0.5],"ratio":null,"oil":0,"pref":""},{"cat":"蔬菜","name":"綠貨菠菜","unit":"100g","grams":100.0,"basis":"熟重","p100":[23.0,3.8,3.0,0.3],"pu":[23.0,3.8,3.0,0.3],"ratio":null,"oil":0,"pref":""},{"cat":"蔬菜","name":"綠貨羽衣甘藍","unit":"100g","grams":100.0,"basis":"成品","p100":[75.0,5.5,2.5,5.0],"pu":[75.0,5.5,2.5,5.0],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"吾島酸奶","unit":"1份","grams":100.0,"basis":"成品","p100":[92.2,11.5,12.7,1.0],"pu":[92.2,11.5,12.7,1.0],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"熱美式","unit":"1杯","grams":240.0,"basis":"成品","p100":[2.1,0.0,0.0,0.0],"pu":[5.0,0.0,0.0,0.0],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"香蕉","unit":"1根","grams":118.0,"basis":"生重","p100":[89.0,22.8,1.1,0.3],"pu":[105.0,26.9,1.3,0.4],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"On雙巧高蛋白","unit":"1份","grams":30.0,"basis":"成品","p100":[386.7,10.0,80.0,2.3],"pu":[116.0,3.0,24.0,0.7],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"雙層牛肉吉士堡去醬","unit":"1份","grams":150.0,"basis":"成品","p100":[288.7,20.0,16.7,16.0],"pu":[433.1,30.0,25.1,24.0],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"板燒雞腿堡去皮去醬","unit":"1份","grams":155.0,"basis":"成品","p100":[256.8,24.5,14.8,11.0],"pu":[398.0,38.0,22.9,17.1],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"低脂肉鬆","unit":"1份","grams":10.0,"basis":"成品","p100":[224.2,1.0,50.8,2.0],"pu":[22.4,0.1,5.1,0.2],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"野人日記餃子","unit":"1顆","grams":20.0,"basis":"成品","p100":[112.8,17.0,6.6,1.9],"pu":[22.6,3.4,1.3,0.4],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"麥當勞小杯玉米","unit":"1份","grams":100.0,"basis":"成品","p100":[54.0,7.0,2.0,1.0],"pu":[54.0,7.0,2.0,1.0],"ratio":null,"oil":0,"pref":""},{"cat":"脂肪","name":"橄欖油","unit":"100g","grams":100.0,"basis":"成品","p100":[884.0,0.0,0.0,100.0],"pu":[884.0,0.0,0.0,100.0],"ratio":null,"oil":0,"pref":""},{"cat":"水果","name":"藍莓","unit":"1顆","grams":1.5,"basis":"生重","p100":[57.0,14.5,0.7,0.3],"pu":[0.9,0.2,0.0,0.0],"ratio":null,"oil":0,"pref":""},{"cat":"水果","name":"小番茄","unit":"1顆","grams":12.0,"basis":"生重","p100":[30.0,6.6,0.9,0.2],"pu":[3.6,0.8,0.1,0.0],"ratio":null,"oil":0,"pref":""},{"cat":"水果","name":"奇異果","unit":"1顆","grams":75.0,"basis":"生重","p100":[61.0,14.7,1.1,0.5],"pu":[45.8,11.0,0.8,0.4],"ratio":null,"oil":0,"pref":""},{"cat":"水果","name":"柚子","unit":"1瓣","grams":40.0,"basis":"生重","p100":[38.0,9.6,0.8,0.0],"pu":[15.2,3.8,0.3,0.0],"ratio":null,"oil":0,"pref":""}];
 const BUNDLED_AT = "2026-11-24";
 const SYNC_URL = "https://script.google.com/macros/s/AKfycbzZDKeK-itFIvG279MDU8MEp740LA1n1a5i37rxIGrC0HtB8MzZ5bzLoVDw1i1ihf7U/exec";
 const CAT_ORDER = ["蛋白質","碳水","蔬菜","水果","脂肪","其他"];
@@ -386,7 +386,41 @@ function renderSettings(){
       <div class="field"><label>同步網址（Apps Script）<input id="syncUrl" placeholder="安裝正式版時會幫你填好" value="${esc(S.syncUrl)}"></label></div>
       <button class="btn" data-act="sync">從 Google Sheet 同步</button>
     </section>
+    <section class="panel">
+      <h2>新增品項</h2>
+      <p class="hint">會寫進 Google Sheet 的 Food DB，並馬上出現在選單裡。需要網路。</p>
+      <div class="row">
+        <label class="fl">品項名稱<input id="nf-name" maxlength="40" placeholder="例如：希臘優格"></label>
+        <label class="fl">類別<select id="nf-cat">${[...new Set([...cats(), ...CAT_ORDER])].map(c=>`<option>${c}</option>`).join("")}</select></label>
+      </div>
+      <div class="row">
+        <label class="fl">數值是<select id="nf-type"><option value="100g">每 100g</option><option value="serving">每一份</option></select></label>
+        <label class="fl">秤重基準<select id="nf-basis"><option>成品</option><option>生重</option><option>熟重</option><option>乾重</option></select></label>
+      </div>
+      <div class="row" id="nf-serving" hidden>
+        <label class="fl">單位<input id="nf-unit" value="份" maxlength="6" placeholder="份、片、顆"></label>
+        <label class="fl">一份幾克（選填）<input id="nf-grams" inputmode="decimal" placeholder="不知道就留空"></label>
+      </div>
+      <div class="goals">
+        <label>熱量 kcal<input id="nf-kcal" inputmode="decimal"></label>
+        <label>碳水 g<input id="nf-c" inputmode="decimal"></label>
+        <label>蛋白質 g<input id="nf-p" inputmode="decimal"></label>
+        <label>脂肪 g<input id="nf-f" inputmode="decimal"></label>
+      </div>
+      <p class="hint" id="nf-check" hidden></p>
+      <label class="fl">寫入密碼<input id="nf-pin" inputmode="numeric" maxlength="12" value="${esc(S.writePin || "")}" placeholder="第一次使用時填，之後會記住"></label>
+      <button class="btn primary" data-act="addFood">新增到食物資料庫</button>
+    </section>
   </div>`;
+}
+/* 碳蛋脂推算的熱量和填的熱量差很多時提醒（例如把一份的數值填成每 100g） */
+function checkNewFood(){
+  const v = k => parseFloat(document.getElementById("nf-"+k)?.value);
+  const el = document.getElementById("nf-check"); if(!el) return;
+  const k = v("kcal"), est = (v("c")||0)*4 + (v("p")||0)*4 + (v("f")||0)*9;
+  const off = k > 0 && est > 0 && Math.abs(est-k) > 15 && Math.abs(est-k)/k > 0.15;
+  el.hidden = !off;
+  if(off) el.textContent = `碳蛋脂推算約 ${k0(est)} kcal，和填的 ${k0(k)} kcal 差比較多，請再確認一次（含代糖、膳食纖維時有差距是正常的）。`;
 }
 
 /* ===== 對話框 ===== */
@@ -432,6 +466,9 @@ document.addEventListener("input", e => {
   if(id === "withRemain"){ S.withRemain = e.target.checked; save() }
   if(id === "prompt"){ S.prompt = e.target.value; save() }
   if(id === "syncUrl"){ S.syncUrl = e.target.value.trim(); save() }
+  if(id === "nf-pin"){ S.writePin = e.target.value.trim(); save() }
+  if(id === "nf-type") document.getElementById("nf-serving").hidden = e.target.value !== "serving";
+  if(id && /^nf-(kcal|c|p|f)$/.test(id)) checkNewFood();
 });
 
 document.addEventListener("click", async e => {
@@ -446,9 +483,39 @@ document.addEventListener("click", async e => {
   const current = () => view.tab === "saved" ? S.saved.find(x=>x.id===view.openId) : null;
 
   switch(act){
-    case "add": touch(); { const last = S.items[S.items.length-1];
+    case "add":
+      sheet(`<h2>新增品項</h2>
+        <button class="btn primary" data-act="addBlank">自行填寫</button>
+        <p class="hint">帶入已儲存套餐（會加在目前的品項後面）</p>
+        ${S.saved.length ? `<ol class="list">${S.saved.map((s,i)=>{const t=sum(s.items.map(calc));
+          return `<li><button data-act="addSet" data-set="${s.id}"><span class="n">${i+1}</span><span>${esc(s.name)}</span><span class="k">${k0(t.kcal)} kcal</span></button></li>`}).join("")}</ol>`
+        : `<div class="empty" style="padding:20px 12px">還沒有已儲存的套餐。<br>在計算結果頁按「儲存紀錄」後，就能在這裡帶入。</div>`}
+        <button class="btn" data-close>取消</button>`); break;
+    case "addBlank": touch(); { closeSheet(); const last = S.items[S.items.length-1];
       S.items.push({id:uid(), cat:last?.cat || "蛋白質", food:"", qty:"", opt:"g_base", oil:"0"}); save(); renderCalc(); renderTotals();
       const nid = S.items[S.items.length-1].id; document.getElementById("food-"+nid)?.scrollIntoView({block:"center"}) } break;
+    case "addSet": touch(); { const s = S.saved.find(x=>x.id===a.dataset.set); if(!s) break;
+      S.items = S.items.filter(it => it.food);                 // 先清掉還沒選食物的空白格
+      S.items.push(...s.items.map(it=>({...it, id:uid()})));
+      if(!S.items.length) S.items.push({id:uid(), cat:"蛋白質", food:"", qty:"", opt:"g_base", oil:"0"});
+      save(); closeSheet(); renderCalc(); renderTotals(); toast(`已帶入「${s.name}」${s.items.length} 項`) } break;
+    case "addFood": {
+      const val = k => document.getElementById("nf-"+k).value.trim();
+      const body = {pin:S.writePin || "", name:val("name"), cat:val("cat"), type:val("type"), basis:val("basis"),
+        unit:val("unit"), grams:val("grams"), kcal:val("kcal"), c:val("c"), p:val("p"), f:val("f")};
+      if(!body.name){ toast("請填品項名稱"); break }
+      if(["kcal","c","p","f"].some(k => body[k] === "" || isNaN(Number(body[k])))){ toast("熱量和碳蛋脂都要填數字，沒有就填 0"); break }
+      if(!body.pin){ toast("請填寫入密碼"); break }
+      if(db().some(f => f.name === body.name)){ toast(`已經有「${body.name}」了`); break }
+      if(!navigator.onLine){ toast("需要網路才能新增"); break }
+      a.disabled = true; a.textContent = "新增中…";
+      try{
+        const res = await fetch(S.syncUrl, {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:JSON.stringify(body)});
+        const j = await res.json();
+        if(!j.ok) throw new Error(j.error || "未知錯誤");
+        await syncDb(); renderSettings(); toast(`已新增「${body.name}」`);
+      }catch(err){ a.disabled = false; a.textContent = "新增到食物資料庫"; toast("新增失敗：" + err.message) }
+    } break;
     case "remove": touch(); { const id = a.closest(".card").dataset.id; S.items = S.items.filter(x=>x.id!==id);
       if(!S.items.length) S.items.push({id:uid(), cat:"蛋白質", food:"", qty:"", opt:"g_base", oil:"0"}); save(); renderCalc(); renderTotals() } break;
     case "calc": view.sub = "result"; view.showRemain = false; render(); window.scrollTo(0,0); break;
@@ -507,7 +574,7 @@ autoSync();
 </script>
 
 <script>
-if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js?v=202611241835").catch(()=>{});
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js?v=202611251116").catch(()=>{});
 </script>
 </body>
 </html>
