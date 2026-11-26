@@ -122,7 +122,7 @@ textarea{font:inherit;font-size:.88rem;color:var(--ink);background:var(--bg);bor
 .macros span::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;vertical-align:1px;background:currentColor}
 .c{color:var(--carb)} .p{color:var(--prot)} .f{color:var(--fat)}
 .macros b{color:var(--ink);font-weight:500}
-nav{display:grid;grid-template-columns:repeat(3,1fr)}
+nav{display:grid;grid-template-columns:repeat(4,1fr)}
 nav button{font:inherit;font-size:.75rem;letter-spacing:.08em;background:none;border:0;color:var(--muted);padding:8px 0 10px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer}
 nav button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 nav button[aria-current="page"]{color:var(--accent)}
@@ -145,6 +145,7 @@ nav button[aria-current="page"]{color:var(--accent)}
     <nav id="nav">
       <button data-tab="calc"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8 7h8M8.5 12h.01M12 12h.01M15.5 12h.01M8.5 15.5h.01M12 15.5h.01M15.5 15.5h.01"/></svg>計算機</button>
       <button data-tab="saved"><svg viewBox="0 0 24 24"><path d="M7 3h10a1 1 0 0 1 1 1v17l-6-4-6 4V4a1 1 0 0 1 1-1z"/></svg>已儲存</button>
+      <button data-tab="today"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 2.5h6v3H9zM8.5 10h7M8.5 13.5h7M8.5 17h4"/></svg>今日菜單</button>
       <button data-tab="settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>設定</button>
     </nav>
   </div>
@@ -153,7 +154,7 @@ nav button[aria-current="page"]{color:var(--accent)}
 
 <script>
 /* ===== 食物資料（Food DB 2026-11-24 匯出；同步後以手機內的最新版為準） ===== */
-const BUNDLED_DB = [{"cat":"蛋白質","name":"煎蛋","unit":"1顆","grams":46.0,"basis":"生重","p100":[143.0,0.7,12.6,9.5],"pu":[65.8,0.3,5.8,4.4],"ratio":null,"oil":5.0,"pref":""},{"cat":"蛋白質","name":"雞胸肉","unit":"100g","grams":100.0,"basis":"生重","p100":[120.0,0.0,22.5,2.6],"pu":[120.0,0.0,22.5,2.6],"ratio":0.75,"oil":5.0,"pref":"生重"},{"cat":"蛋白質","name":"豬里肌","unit":"100g","grams":100.0,"basis":"生重","p100":[119.0,0.0,21.6,3.9],"pu":[119.0,0.0,21.6,3.9],"ratio":0.75,"oil":5.0,"pref":"生重"},{"cat":"蛋白質","name":"蝦仁","unit":"100g","grams":100.0,"basis":"生重","p100":[85.0,0.2,20.1,0.5],"pu":[85.0,0.2,20.1,0.5],"ratio":0.8,"oil":0,"pref":"生重"},{"cat":"蛋白質","name":"鮭魚去皮","unit":"100g","grams":100.0,"basis":"生重","p100":[208.0,0.0,20.4,13.4],"pu":[208.0,0.0,20.4,13.4],"ratio":0.8,"oil":0,"pref":"生重"},{"cat":"蛋白質","name":"白肉魚","unit":"100g","grams":100.0,"basis":"生重","p100":[82.0,0.0,17.9,0.7],"pu":[82.0,0.0,17.9,0.7],"ratio":0.8,"oil":5.0,"pref":"生重"},{"cat":"蛋白質","name":"牛腿肉","unit":"100g","grams":100.0,"basis":"生重","p100":[121.0,0.0,21.5,4.0],"pu":[121.0,0.0,21.5,4.0],"ratio":0.7,"oil":0,"pref":"生重"},{"cat":"碳水","name":"馬鈴薯","unit":"100g","grams":100.0,"basis":"熟重","p100":[93.0,21.0,2.5,0.1],"pu":[93.0,21.0,2.5,0.1],"ratio":0.83,"oil":0,"pref":"熟重"},{"cat":"碳水","name":"地瓜","unit":"100g","grams":100.0,"basis":"熟重","p100":[130.0,30.0,2.1,0.2],"pu":[130.0,30.0,2.1,0.2],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"馬鈴薯+地瓜","unit":"100g","grams":100.0,"basis":"熟重","p100":[111.5,25.5,2.3,0.2],"pu":[111.5,25.5,2.3,0.2],"ratio":null,"oil":0,"pref":"熟重"},{"cat":"碳水","name":"燕麥片","unit":"60g","grams":60.0,"basis":"乾重","p100":[380.0,68.0,12.0,7.0],"pu":[228.0,40.8,7.2,4.2],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"恰巴塔","unit":"1顆","grams":100.0,"basis":"成品","p100":[224.4,40.8,10.5,1.8],"pu":[224.4,40.8,10.5,1.8],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"蕎麥麵","unit":"100g","grams":100.0,"basis":"熟重","p100":[99.0,21.4,5.1,0.1],"pu":[99.0,21.4,5.1,0.1],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"藜麥","unit":"100g","grams":100.0,"basis":"熟重","p100":[120.0,21.3,4.4,1.9],"pu":[120.0,21.3,4.4,1.9],"ratio":3.0,"oil":0,"pref":"熟重"},{"cat":"碳水","name":"烏龍麵","unit":"100g","grams":100.0,"basis":"熟重","p100":[105.0,21.6,2.6,0.4],"pu":[105.0,21.6,2.6,0.4],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"白飯","unit":"100g","grams":100.0,"basis":"熟重","p100":[156.0,37.1,2.5,0.3],"pu":[156.0,37.1,2.5,0.3],"ratio":2.2,"oil":0,"pref":"熟重"},{"cat":"碳水","name":"藜麥白米","unit":"1份","grams":50.0,"basis":"生重","p100":[366.0,77.2,9.2,1.0],"pu":[183.0,38.6,4.6,0.5],"ratio":2.3,"oil":0,"pref":"生重"},{"cat":"碳水","name":"光合力量吐司","unit":"1份","grams":50.0,"basis":"成品","p100":[254.3,47.2,10.6,0.0],"pu":[127.2,23.6,5.3,0.0],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"劍盾青檸吐司","unit":"1份","grams":50.0,"basis":"成品","p100":[260.3,39.2,15.4,2.8],"pu":[130.2,19.6,7.7,1.4],"ratio":null,"oil":0,"pref":""},{"cat":"蔬菜","name":"綜合蔬菜","unit":"100g","grams":100.0,"basis":"熟重","p100":[35.0,5.5,2.1,0.4],"pu":[35.0,5.5,2.1,0.4],"ratio":0.8,"oil":0,"pref":"生重"},{"cat":"蔬菜","name":"綠貨白花菜","unit":"100g","grams":100.0,"basis":"熟重","p100":[23.0,4.1,1.8,0.5],"pu":[23.0,4.1,1.8,0.5],"ratio":null,"oil":0,"pref":""},{"cat":"蔬菜","name":"綠貨菠菜","unit":"100g","grams":100.0,"basis":"熟重","p100":[23.0,3.8,3.0,0.3],"pu":[23.0,3.8,3.0,0.3],"ratio":null,"oil":0,"pref":""},{"cat":"蔬菜","name":"綠貨羽衣甘藍","unit":"100g","grams":100.0,"basis":"成品","p100":[75.0,5.5,2.5,5.0],"pu":[75.0,5.5,2.5,5.0],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"吾島酸奶","unit":"1份","grams":100.0,"basis":"成品","p100":[92.2,11.5,12.7,1.0],"pu":[92.2,11.5,12.7,1.0],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"熱美式","unit":"1杯","grams":240.0,"basis":"成品","p100":[2.1,0.0,0.0,0.0],"pu":[5.0,0.0,0.0,0.0],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"香蕉","unit":"1根","grams":118.0,"basis":"生重","p100":[89.0,22.8,1.1,0.3],"pu":[105.0,26.9,1.3,0.4],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"On雙巧高蛋白","unit":"1份","grams":30.0,"basis":"成品","p100":[386.7,10.0,80.0,2.3],"pu":[116.0,3.0,24.0,0.7],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"雙層牛肉吉士堡去醬","unit":"1份","grams":150.0,"basis":"成品","p100":[288.7,20.0,16.7,16.0],"pu":[433.1,30.0,25.1,24.0],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"板燒雞腿堡去皮去醬","unit":"1份","grams":155.0,"basis":"成品","p100":[256.8,24.5,14.8,11.0],"pu":[398.0,38.0,22.9,17.1],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"低脂肉鬆","unit":"1份","grams":10.0,"basis":"成品","p100":[224.2,1.0,50.8,2.0],"pu":[22.4,0.1,5.1,0.2],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"野人日記餃子","unit":"1顆","grams":20.0,"basis":"成品","p100":[112.8,17.0,6.6,1.9],"pu":[22.6,3.4,1.3,0.4],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"麥當勞小杯玉米","unit":"1份","grams":100.0,"basis":"成品","p100":[54.0,7.0,2.0,1.0],"pu":[54.0,7.0,2.0,1.0],"ratio":null,"oil":0,"pref":""},{"cat":"脂肪","name":"橄欖油","unit":"100g","grams":100.0,"basis":"成品","p100":[884.0,0.0,0.0,100.0],"pu":[884.0,0.0,0.0,100.0],"ratio":null,"oil":0,"pref":""},{"cat":"水果","name":"藍莓","unit":"1顆","grams":1.5,"basis":"生重","p100":[57.0,14.5,0.7,0.3],"pu":[0.9,0.2,0.0,0.0],"ratio":null,"oil":0,"pref":""},{"cat":"水果","name":"小番茄","unit":"1顆","grams":12.0,"basis":"生重","p100":[30.0,6.6,0.9,0.2],"pu":[3.6,0.8,0.1,0.0],"ratio":null,"oil":0,"pref":""},{"cat":"水果","name":"奇異果","unit":"1顆","grams":75.0,"basis":"生重","p100":[61.0,14.7,1.1,0.5],"pu":[45.8,11.0,0.8,0.4],"ratio":null,"oil":0,"pref":""},{"cat":"水果","name":"柚子","unit":"1瓣","grams":40.0,"basis":"生重","p100":[38.0,9.6,0.8,0.0],"pu":[15.2,3.8,0.3,0.0],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"佳德蛋黃酥","unit":"1份","grams":65.0,"basis":"成品","p100":[435.4,46.8,9.2,23.5],"pu":[283.0,30.4,6.0,15.3],"ratio":null,"oil":0,"pref":""}];
+const BUNDLED_DB = [{"cat":"蛋白質","name":"煎蛋","unit":"1顆","grams":46.0,"basis":"生重","p100":[143.0,0.7,12.6,9.5],"pu":[65.8,0.3,5.8,4.4],"ratio":null,"oil":5.0,"pref":""},{"cat":"蛋白質","name":"雞胸肉","unit":"100g","grams":100.0,"basis":"生重","p100":[120.0,0.0,22.5,2.6],"pu":[120.0,0.0,22.5,2.6],"ratio":0.75,"oil":5.0,"pref":"生重"},{"cat":"蛋白質","name":"豬里肌","unit":"100g","grams":100.0,"basis":"生重","p100":[119.0,0.0,21.6,3.9],"pu":[119.0,0.0,21.6,3.9],"ratio":0.75,"oil":5.0,"pref":"生重"},{"cat":"蛋白質","name":"蝦仁","unit":"100g","grams":100.0,"basis":"生重","p100":[85.0,0.2,20.1,0.5],"pu":[85.0,0.2,20.1,0.5],"ratio":0.8,"oil":0,"pref":"生重"},{"cat":"蛋白質","name":"鮭魚去皮","unit":"100g","grams":100.0,"basis":"生重","p100":[208.0,0.0,20.4,13.4],"pu":[208.0,0.0,20.4,13.4],"ratio":0.8,"oil":0,"pref":"生重"},{"cat":"蛋白質","name":"白肉魚","unit":"100g","grams":100.0,"basis":"生重","p100":[82.0,0.0,17.9,0.7],"pu":[82.0,0.0,17.9,0.7],"ratio":0.8,"oil":5.0,"pref":"生重"},{"cat":"蛋白質","name":"牛腿肉","unit":"100g","grams":100.0,"basis":"生重","p100":[121.0,0.0,21.5,4.0],"pu":[121.0,0.0,21.5,4.0],"ratio":0.7,"oil":0,"pref":"生重"},{"cat":"碳水","name":"馬鈴薯","unit":"100g","grams":100.0,"basis":"熟重","p100":[93.0,21.0,2.5,0.1],"pu":[93.0,21.0,2.5,0.1],"ratio":0.83,"oil":0,"pref":"熟重"},{"cat":"碳水","name":"地瓜","unit":"100g","grams":100.0,"basis":"熟重","p100":[130.0,30.0,2.1,0.2],"pu":[130.0,30.0,2.1,0.2],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"馬鈴薯+地瓜","unit":"100g","grams":100.0,"basis":"熟重","p100":[111.5,25.5,2.3,0.2],"pu":[111.5,25.5,2.3,0.2],"ratio":null,"oil":0,"pref":"熟重"},{"cat":"碳水","name":"燕麥片","unit":"60g","grams":60.0,"basis":"乾重","p100":[380.0,68.0,12.0,7.0],"pu":[228.0,40.8,7.2,4.2],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"恰巴塔","unit":"1顆","grams":100.0,"basis":"成品","p100":[224.4,40.8,10.5,1.8],"pu":[224.4,40.8,10.5,1.8],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"蕎麥麵","unit":"100g","grams":100.0,"basis":"熟重","p100":[99.0,21.4,5.1,0.1],"pu":[99.0,21.4,5.1,0.1],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"藜麥","unit":"100g","grams":100.0,"basis":"熟重","p100":[120.0,21.3,4.4,1.9],"pu":[120.0,21.3,4.4,1.9],"ratio":3.0,"oil":0,"pref":"熟重"},{"cat":"碳水","name":"烏龍麵","unit":"100g","grams":100.0,"basis":"熟重","p100":[105.0,21.6,2.6,0.4],"pu":[105.0,21.6,2.6,0.4],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"白飯","unit":"100g","grams":100.0,"basis":"熟重","p100":[156.0,37.1,2.5,0.3],"pu":[156.0,37.1,2.5,0.3],"ratio":2.2,"oil":0,"pref":"熟重"},{"cat":"碳水","name":"藜麥白米","unit":"1份","grams":50.0,"basis":"生重","p100":[366.0,77.2,9.2,1.0],"pu":[183.0,38.6,4.6,0.5],"ratio":2.3,"oil":0,"pref":"生重"},{"cat":"碳水","name":"光合力量吐司","unit":"1份","grams":50.0,"basis":"成品","p100":[254.3,47.2,10.6,0.0],"pu":[127.2,23.6,5.3,0.0],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"劍盾青檸吐司","unit":"1份","grams":50.0,"basis":"成品","p100":[260.3,39.2,15.4,2.8],"pu":[130.2,19.6,7.7,1.4],"ratio":null,"oil":0,"pref":""},{"cat":"蔬菜","name":"綜合蔬菜","unit":"100g","grams":100.0,"basis":"熟重","p100":[35.0,5.5,2.1,0.4],"pu":[35.0,5.5,2.1,0.4],"ratio":0.8,"oil":0,"pref":"生重"},{"cat":"蔬菜","name":"綠貨白花菜","unit":"100g","grams":100.0,"basis":"熟重","p100":[23.0,4.1,1.8,0.5],"pu":[23.0,4.1,1.8,0.5],"ratio":null,"oil":0,"pref":""},{"cat":"蔬菜","name":"綠貨菠菜","unit":"100g","grams":100.0,"basis":"熟重","p100":[23.0,3.8,3.0,0.3],"pu":[23.0,3.8,3.0,0.3],"ratio":null,"oil":0,"pref":""},{"cat":"蔬菜","name":"綠貨羽衣甘藍","unit":"100g","grams":100.0,"basis":"成品","p100":[75.0,5.5,2.5,5.0],"pu":[75.0,5.5,2.5,5.0],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"吾島酸奶","unit":"1份","grams":100.0,"basis":"成品","p100":[92.2,11.5,12.7,1.0],"pu":[92.2,11.5,12.7,1.0],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"熱美式","unit":"1杯","grams":240.0,"basis":"成品","p100":[2.1,0.0,0.0,0.0],"pu":[5.0,0.0,0.0,0.0],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"香蕉","unit":"1根","grams":118.0,"basis":"生重","p100":[89.0,22.8,1.1,0.3],"pu":[105.0,26.9,1.3,0.4],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"On雙巧高蛋白","unit":"1份","grams":30.0,"basis":"成品","p100":[386.7,10.0,80.0,2.3],"pu":[116.0,3.0,24.0,0.7],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"雙層牛肉吉士堡去醬","unit":"1份","grams":150.0,"basis":"成品","p100":[288.7,20.0,16.7,16.0],"pu":[433.1,30.0,25.1,24.0],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"板燒雞腿堡去皮去醬","unit":"1份","grams":155.0,"basis":"成品","p100":[256.8,24.5,14.8,11.0],"pu":[398.0,38.0,22.9,17.1],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"低脂肉鬆","unit":"1份","grams":10.0,"basis":"成品","p100":[224.2,1.0,50.8,2.0],"pu":[22.4,0.1,5.1,0.2],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"野人日記餃子","unit":"1顆","grams":20.0,"basis":"成品","p100":[112.8,17.0,6.6,1.9],"pu":[22.6,3.4,1.3,0.4],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"麥當勞小杯玉米","unit":"1份","grams":100.0,"basis":"成品","p100":[54.0,7.0,2.0,1.0],"pu":[54.0,7.0,2.0,1.0],"ratio":null,"oil":0,"pref":""},{"cat":"脂肪","name":"橄欖油","unit":"100g","grams":100.0,"basis":"成品","p100":[884.0,0.0,0.0,100.0],"pu":[884.0,0.0,0.0,100.0],"ratio":null,"oil":0,"pref":""},{"cat":"水果","name":"藍莓","unit":"1顆","grams":1.5,"basis":"生重","p100":[57.0,14.5,0.7,0.3],"pu":[0.9,0.2,0.0,0.0],"ratio":null,"oil":0,"pref":""},{"cat":"水果","name":"小番茄","unit":"1顆","grams":12.0,"basis":"生重","p100":[30.0,6.6,0.9,0.2],"pu":[3.6,0.8,0.1,0.0],"ratio":null,"oil":0,"pref":""},{"cat":"水果","name":"奇異果","unit":"1顆","grams":75.0,"basis":"生重","p100":[61.0,14.7,1.1,0.5],"pu":[45.8,11.0,0.8,0.4],"ratio":null,"oil":0,"pref":""},{"cat":"水果","name":"柚子","unit":"1瓣","grams":40.0,"basis":"生重","p100":[38.0,9.6,0.8,0.0],"pu":[15.2,3.8,0.3,0.0],"ratio":null,"oil":0,"pref":""},{"cat":"碳水","name":"佳德蛋黃酥","unit":"1份","grams":65.0,"basis":"成品","p100":[435.4,46.8,9.2,23.5],"pu":[283.0,30.4,6.0,15.3],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"麥克雞塊","unit":"1塊","grams":16.0,"basis":"成品","p100":[260.0,15.6,14.6,15.6],"pu":[41.6,2.5,2.3,2.5],"ratio":null,"oil":0,"pref":""},{"cat":"蛋白質","name":"象大廚娟豆腐","unit":"100g","grams":100.0,"basis":"成品","p100":[49.0,1.9,4.3,2.7],"pu":[49.0,1.9,4.3,2.7],"ratio":null,"oil":0,"pref":""},{"cat":"其他","name":"佳德老婆餅","unit":"1份","grams":75.0,"basis":"成品","p100":[422.3,55.7,5.9,19.5],"pu":[316.7,41.8,4.4,14.6],"ratio":null,"oil":0,"pref":""}];
 const BUNDLED_AT = "2026-11-24";
 const SYNC_URL = "https://script.google.com/macros/s/AKfycbzZDKeK-itFIvG279MDU8MEp740LA1n1a5i37rxIGrC0HtB8MzZ5bzLoVDw1i1ihf7U/exec";
 const CAT_ORDER = ["蛋白質","碳水","蔬菜","水果","脂肪","其他"];
@@ -179,6 +180,7 @@ const S = Object.assign({
   withRemain: true,
   prompt: DEFAULT_PROMPT,
   saved: [],
+  today: null,          // 今日菜單：{at, from, items}；只有再次「儲存為今日菜單」才會被覆蓋
   recent: {},
 }, load() || {});
 const db = () => S.db || BUNDLED_DB;
@@ -307,13 +309,13 @@ function table(items, withRemain){
   const rows = items.filter(it=>calc(it).ok);
   const t = sum(rows.map(calc));
   const G = S.goals;
-  const rem = withRemain && G ? {kcal:G.kcal-t.kcal, c:G.c-t.c, p:G.p-t.p, f:G.f-t.f} : null;
+  const rem = withRemain && G && G.kcal > 0 ? {kcal:G.kcal-t.kcal, c:G.c-t.c, p:G.p-t.p, f:G.f-t.f} : null;
   const cell = (v,fmt) => `<td class="${v<0?"neg":""}">${fmt(v)}</td>`;
   return `<div class="tablewrap"><table>
     <thead><tr><th>品項</th><th>熱量</th><th>碳</th><th>蛋</th><th>脂</th></tr></thead>
     <tbody>${rows.map(it=>{const r=calc(it);return `<tr><td>${esc(it.food)}<small>${esc(describe(it))}</small></td><td>${k0(r.kcal)}</td><td>${g1(r.c)}</td><td>${g1(r.p)}</td><td>${g1(r.f)}</td></tr>`}).join("") || `<tr><td colspan="5" class="muted">還沒有填好的品項</td></tr>`}</tbody>
     <tfoot><tr><td>Total</td><td>${k0(t.kcal)}</td><td>${g1(t.c)}</td><td>${g1(t.p)}</td><td>${g1(t.f)}</td></tr>
-    ${rem ? `<tr class="remain"><td>今日剩餘<small>目標 ${k0(G.kcal)} kcal</small></td>${cell(rem.kcal,k0)}${cell(rem.c,g1)}${cell(rem.p,g1)}${cell(rem.f,g1)}</tr>` : ""}</tfoot>
+    ${rem ? `<tr class="remain"><td>剩餘額度<small>目標 ${k0(G.kcal)} kcal</small></td>${cell(rem.kcal,k0)}${cell(rem.c,g1)}${cell(rem.p,g1)}${cell(rem.f,g1)}</tr>` : ""}</tfoot>
   </table></div>`;
 }
 
@@ -323,6 +325,7 @@ function render(){
   else if(view.tab === "calc") renderCalc();
   else if(view.tab === "saved" && view.openId) renderSavedDetail();
   else if(view.tab === "saved") renderSaved();
+  else if(view.tab === "today") renderToday();
   else renderSettings();
   renderTotals();
 }
@@ -342,13 +345,26 @@ function renderCalc(){
 }
 function renderResult(){
   $app.innerHTML = `<header class="head"><h1>營養素計算機</h1><small>計算結果</small></header>
-    ${table(S.items, view.showRemain)}
+    ${table(S.items, true)}
+    ${goalHint()}
     <div class="btns">
       <button class="btn primary" data-act="copy">複製文字版</button>
       <button class="btn" data-act="save">儲存紀錄</button>
-      <button class="btn" data-act="remain">剩餘額度計算</button>
+      <button class="btn" data-act="saveToday">儲存為今日菜單</button>
       <button class="btn" data-act="back">修改</button>
     </div>`;
+}
+const goalHint = () => (S.goals && S.goals.kcal > 0) ? "" : `<p class="hint">到「設定」填每日目標，表格就會顯示剩餘額度。</p>`;
+function renderToday(){
+  const T = S.today;
+  const when = T ? new Date(T.at).toLocaleString("zh-TW", {month:"numeric", day:"numeric", hour:"2-digit", minute:"2-digit", hour12:false}) : "";
+  $app.innerHTML = `<header class="head"><h1>今日菜單</h1><small>${T ? `${when} 儲存${T.from ? "・來自" + esc(T.from) : ""}` : ""}</small></header>
+    ${T ? `${table(T.items, true)}${goalHint()}
+      <div class="btns">
+        <button class="btn primary" data-act="copyToday">複製文字版</button>
+        <button class="btn" data-act="editToday">修改（載入計算機）</button>
+      </div>`
+    : `<div class="empty">還沒有今日菜單。<br>在計算結果頁按「儲存為今日菜單」，菜單就會一直留在這裡，直到你存下一份新的。</div>`}`;
 }
 function renderSaved(){
   $app.innerHTML = `<header class="head"><h1>已儲存清單</h1><small>${S.saved.length} 組</small></header>
@@ -359,10 +375,11 @@ function renderSaved(){
 function renderSavedDetail(){
   const s = S.saved.find(x=>x.id===view.openId); if(!s){ view.openId=null; return renderSaved() }
   $app.innerHTML = `<header class="head"><h1>${esc(s.name)}</h1><small><a href="#" data-act="closeSaved" style="color:var(--accent)">← 清單</a></small></header>
-    ${table(s.items, view.showRemain)}
+    ${table(s.items, true)}
+    ${goalHint()}
     <div class="btns">
       <button class="btn primary" data-act="copySaved">複製文字版</button>
-      <button class="btn" data-act="remain">剩餘額度計算</button>
+      <button class="btn" data-act="saveTodaySaved">儲存為今日菜單</button>
       <button class="btn" data-act="editSaved">修改（載入計算機）</button>
       <button class="btn danger" data-act="delSaved">刪除</button>
     </div>`;
@@ -430,16 +447,18 @@ function closeSheet(){ $layer.innerHTML = "" }
 let toastT;
 function toast(msg){ clearTimeout(toastT); let t = document.querySelector(".toast"); if(!t){ t = document.createElement("div"); t.className="toast"; t.setAttribute("role","status"); document.body.appendChild(t) } t.textContent = msg; toastT = setTimeout(()=>t.remove(), 2200) }
 
-function goalsSheet(){
-  const G = S.goals;
-  sheet(`<h2>今日目標</h2><p class="hint">會記住這次填的數字，下次直接帶入。</p>
-    <div class="goals">
-      <label>熱量 kcal<input id="m-kcal" inputmode="decimal" value="${G.kcal}"></label>
-      <label>碳水 g<input id="m-c" inputmode="decimal" value="${G.c}"></label>
-      <label>蛋白質 g<input id="m-p" inputmode="decimal" value="${G.p}"></label>
-      <label>脂肪 g<input id="m-f" inputmode="decimal" value="${G.f}"></label>
-    </div>
-    <div class="btns two"><button class="btn" data-close>取消</button><button class="btn primary" data-act="goalsOk">計算剩餘</button></div>`);
+/* 今日菜單：已有菜單時先確認要不要覆蓋 */
+let pendingToday = null;
+function askSaveToday(items, from){
+  pendingToday = {items: items.filter(it=>calc(it).ok).map(it=>({...it, id:uid()})), from};
+  if(!pendingToday.items.length){ toast("還沒有填好的品項"); pendingToday = null; return }
+  if(!S.today){ commitToday(); return }
+  sheet(`<h2>覆蓋今日菜單？</h2><p class="hint">目前的今日菜單（${S.today.items.length} 項）會被這份取代。</p>
+    <div class="btns two"><button class="btn" data-close>取消</button><button class="btn primary" data-act="saveTodayOk">覆蓋</button></div>`);
+}
+function commitToday(){
+  S.today = {at: Date.now(), from: pendingToday.from, items: pendingToday.items};
+  pendingToday = null; save(); closeSheet(); toast("已存為今日菜單");
 }
 
 /* ===== 事件 ===== */
@@ -528,9 +547,13 @@ document.addEventListener("click", async e => {
     case "saveOk": { const name = document.getElementById("saveName").value.trim() || `未命名 ${S.saved.length+1}`;
       S.saved.unshift({id:uid(), name, at:Date.now(), items:S.items.filter(it=>calc(it).ok).map(it=>({...it, id:uid()}))});
       save(); closeSheet(); toast(`已儲存「${name}」`) } break;
-    case "remain": goalsSheet(); break;
-    case "goalsOk": ["kcal","c","p","f"].forEach(k => S.goals[k] = parseFloat(document.getElementById("m-"+k).value)||0);
-      save(); closeSheet(); view.showRemain = true; render(); break;
+    case "saveToday": askSaveToday(S.items, ""); break;
+    case "saveTodaySaved": { const s = current(); if(s) askSaveToday(s.items, `「${s.name}」`) } break;
+    case "saveTodayOk": if(pendingToday) commitToday(); break;
+    case "copyToday": if(S.today) copy(toText(S.today.items)); break;
+    case "editToday": if(!S.today) break;
+      S.items = S.today.items.map(it=>({...it, id:uid()})); S.sample = false; save();
+      view = {tab:"calc", sub:null, openId:null}; render(); window.scrollTo(0,0); toast("已載入今日菜單，改完可再存回去"); break;
     case "closeSaved": view.openId = null; render(); break;
     case "editSaved": { const s = current(); if(!s) break;
       S.items = s.items.map(it=>({...it, id:uid()})); S.sample = false; save();
@@ -574,7 +597,7 @@ autoSync();
 </script>
 
 <script>
-if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js?v=202611251317").catch(()=>{});
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js?v=202611261547").catch(()=>{});
 </script>
 </body>
 </html>
